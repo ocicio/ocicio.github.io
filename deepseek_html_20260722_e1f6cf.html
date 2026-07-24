@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>🌳 群落沙盘 · 塞罕坝110年山火后修复</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-touch-callout: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: #f0efe7;
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            touch-action: none;
+        }
+
+        .game-container {
+            max-width: 1400px;
+            width: 100%;
+            background: #d9d0c0;
+            border-radius: 48px 48px 32px 32px;
+            padding: 24px 28px 32px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25), inset 0 2px 4px rgba(255, 255, 240, 0.6);
+            border: 1px solid #c2b6a2;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-weight: 500;
+            font-size: 1.7rem;
+            color: #3d3529;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header h1 small {
+            font-size: 0.95rem;
+            font-weight: 400;
+            color: #5f5342;
+            background: #e8e0d2;
+            padding: 2px 14px;
+            border-radius: 40px;
+        }
+
+        .toolbar {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .btn {
+            background: #fcf9f2;
+            border: none;
+            padding: 8px 22px;
+            border-radius: 60px;
+            font-size: 1rem;
+            font-weight: 500;
+            color: #3d3529;
+            box-shadow: 0 4px 0 #b3a48e;
+            cursor: pointer;
+            transition: all 0.07s ease;
+            border: 1px solid #d6cbbc;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            touch-action: manipulation;
+        }
+
+        .btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 1px 0 #b3a48e;
+        }
+
+        .btn-reset {
+            background: #e6dcd0;
+            box-shadow: 0 4px 0 #b3a48e;
+        }
+
+        .step-arrow {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 6px 0 12px 0;
+            gap: 16px;
+        }
+
+        .step-arrow .arrow-btn {
+            background: #fcf9f2;
+            border: none;
+            font-size: 2.2rem;
+            padding: 6px 30px;
+            border-radius: 60px;
+            box-shadow: 0 4px 0 #b3a48e;
+            cursor: pointer;
+            transition: all 0.1s ease;
+            border: 1px solid #d6cbbc;
+            color: #3d3529;
+            touch-action: manipulation;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 500;
+            font-size: 1.1rem;
+        }
+
+        .step-arrow .arrow-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 1px 0 #b3a48e;
+        }
+
+        .step-arrow .arrow-btn .arrow-icon {
+            font-size: 1.8rem;
+            line-height: 1;
+        }
+
+        .step-arrow .step-hint {
+            font-size: 0.85rem;
+            color: #5f5342;
+            background: #e8e0d2;
+            padding: 4px 16px;
+            border-radius: 40px;
+            font-weight: 500;
+        }
+
+        .sandbox-wrapper {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .library {
+            flex: 0 0 140px;
+            background: #ede7db;
+            border-radius: 40px;
+            padding: 20px 10px;
+            box-shadow: inset 0 2px 6px rgba(90, 70, 50, 0.15);
+            border: 1px solid #cfc3b2;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            align-items: center;
+            min-height: 400px;
+            height: fit-content;
+            transition: all 0.4s ease;
+        }
+
+        .library-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #4d4133;
+            letter-spacing: 1px;
+            border-bottom: 2px dashed #b9ab97;
+            padding-bottom: 8px;
+            width: 80%;
+            text-align: center;
+        }
+
+        .library-divider {
+            width: 80%;
+            border-top: 1px dashed #b9ab97;
+            margin: 4px 0;
+        }
+
+        .plant-card {
+            background: #fcf9f2;
+            width: 100px;
+            padding: 10px 0 8px;
+            border-radius: 60px 60px 30px 30px;
+            box-shadow: 0 6px 0 #b3a48e, 0 4px 10px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            cursor: grab;
+            transition: all 0.1s ease;
+            border: 1px solid #d6cbbc;
+            font-weight: 500;
+            color: #2f281e;
+            font-size: 0.9rem;
+            touch-action: none;
+        }
+
+        .plant-card:active {
+            cursor: grabbing;
+            opacity: 0.7;
+            transform: scale(0.96);
+        }
+
+        .plant-card img {
+            width: 48px;
+            height: 48px;
+            object-fit: contain;
+            pointer-events: none;
+            display: block;
+        }
+
+        .plant-card .plant-label {
+            background: #e8e0d2;
+            padding: 1px 14px;
+            border-radius: 40px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #3d3529;
+        }
+
+        .animal-card {
+            background: #fcf9f2;
+            width: 100px;
+            padding: 10px 0 8px;
+            border-radius: 60px 60px 30px 30px;
+            box-shadow: 0 6px 0 #b3a48e, 0 4px 10px rgba(0, 0, 0, 0.05);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            cursor: grab;
+            transition: all 0.1s ease;
+            border: 1px solid #d6cbbc;
+            font-weight: 500;
+            color: #2f281e;
+            font-size: 0.9rem;
+            touch-action: none;
+        }
+
+        .animal-card.visible {
+            display: flex;
+        }
+
+        .animal-card:active {
+            cursor: grabbing;
+            opacity: 0.7;
+            transform: scale(0.96);
+        }
+
+        .animal-card img {
+            width: 48px;
+            height: 48px;
+            object-fit: contain;
+            pointer-events: none;
+            display: block;
+        }
+
+        .animal-card .animal-label {
+            background: #e8e0d2;
+            padding: 1px 14px;
+            border-radius: 40px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #3d3529;
+        }
+
+        .hint-text {
+            font-size: 0.65rem;
+            color: #5f5342;
+            opacity: 0.5;
+            text-align: center;
+            margin-top: 4px;
+        }
+
+        .sandbox-area {
+            flex: 1;
+            min-width: 500px;
+            background: #dacfc0;
+            border-radius: 60px 60px 40px 40px;
+            padding: 20px 18px 18px;
+            box-shadow: inset 0 -6px 0 #b3a292, inset 0 8px 12px rgba(255, 242, 220, 0.6);
+            border: 2px solid #c6b7a4;
+            position: relative;
+        }
+
+        .canvas {
+            position: relative;
+            width: 100%;
+            min-height: 500px;
+            height: 580px;
+            background: #e1d3be;
+            background-image:
+                radial-gradient(circle at 20% 30%, #d4c3ab 1px, transparent 1px),
+                radial-gradient(circle at 80% 70%, #d4c3ab 1px, transparent 1px);
+            background-size: 40px 40px;
+            border-radius: 40px;
+            box-shadow: inset 0 0 0 2px #b9aa94, inset 0 0 20px rgba(90, 70, 40, 0.15);
+            overflow: hidden;
+            touch-action: none;
+        }
+
+        .canvas-empty-message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #b09f89;
+            font-size: 1.1rem;
+            font-weight: 400;
+            letter-spacing: 2px;
+            background: rgba(230, 215, 195, 0.4);
+            padding: 10px 28px;
+            border-radius: 80px;
+            backdrop-filter: blur(2px);
+            pointer-events: none;
+            border: 1px dashed #bba88e;
+            opacity: 0.5;
+        }
+
+        .plant-instance {
+            position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: grab;
+            touch-action: none;
+            z-index: 2;
+        }
+
+        .plant-instance:active {
+            cursor: grabbing;
+            z-index: 100;
+        }
+
+        .plant-instance img {
+            object-fit: contain;
+            pointer-events: none;
+            display: block;
+            filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.12));
+        }
+
+        .animal-instance {
+            position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: grab;
+            touch-action: none;
+            z-index: 10;
+            filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.15));
+            transition: filter 0.3s;
+        }
+
+        .animal-instance:active {
+            cursor: grabbing;
+            z-index: 100;
+        }
+
+        .animal-instance img {
+            width: 56px;
+            height: 56px;
+            object-fit: contain;
+            pointer-events: none;
+            display: block;
+        }
+
+        .animal-instance.placed-correct {
+            filter: drop-shadow(0 0 0 3px rgba(76, 175, 80, 0.5));
+        }
+
+        .summary-area {
+            margin-top: 16px;
+            background: #e8dfd0;
+            border-radius: 30px;
+            padding: 14px 24px;
+            border: 2px solid #c6b7a4;
+            min-height: 54px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            color: #3d3529;
+            transition: all 0.3s;
+        }
+
+        .summary-area .summary-text {
+            text-align: center;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+        }
+
+        .summary-area .summary-placeholder {
+            color: #b09f89;
+            font-weight: 400;
+            font-style: italic;
+            font-size: 0.95rem;
+        }
+
+        @media (max-width: 850px) {
+            .sandbox-wrapper {
+                flex-direction: column;
+            }
+            .library {
+                flex: 1 1 auto;
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: center;
+                padding: 14px 10px;
+                min-height: auto;
+                gap: 10px;
+            }
+            .library-title {
+                width: 100%;
+            }
+            .library-divider {
+                display: none;
+            }
+            .plant-card,
+            .animal-card {
+                width: 80px;
+                padding: 8px 0;
+            }
+            .plant-card img,
+            .animal-card img {
+                width: 40px;
+                height: 40px;
+            }
+            .sandbox-area {
+                min-width: 0;
+            }
+            .canvas {
+                height: 420px;
+                min-height: 350px;
+            }
+            .header h1 {
+                font-size: 1.3rem;
+            }
+            .header h1 small {
+                font-size: 0.75rem;
+            }
+            .animal-instance img {
+                width: 44px;
+                height: 44px;
+            }
+            .step-arrow .arrow-btn {
+                font-size: 0.95rem;
+                padding: 4px 20px;
+            }
+        }
+
+        @media (max-width: 500px) {
+            .canvas {
+                height: 340px;
+            }
+            .animal-instance img {
+                width: 38px;
+                height: 38px;
+            }
+            .plant-instance img {
+                width: 30px !important;
+                height: 30px !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="game-container">
+        <div class="header">
+            <h1>
+                🌱 群落沙盘
+                <small>塞罕坝 · 110年山火后修复</small>
+            </h1>
+            <div class="toolbar">
+                <button class="btn btn-reset" id="resetBtn">🔄 重置</button>
+            </div>
+        </div>
+
+        <div class="step-arrow" id="stepArrow">
+            <span class="step-hint" id="stepHint">① 搭建植物群落</span>
+            <button class="arrow-btn" id="nextStepBtn">
+                <span class="arrow-icon">➡️</span> 下一步
+            </button>
+        </div>
+
+        <div class="sandbox-wrapper">
+            <div class="library" id="library">
+                <div class="library-title">🌿 植物</div>
+
+                <div class="plant-card" data-type="地衣">
+                    <img src="diyi.png" alt="地衣" />
+                    <span class="plant-label">地衣</span>
+                </div>
+
+                <div class="plant-card" data-type="苔藓">
+                    <img src="taixian.png" alt="苔藓" />
+                    <span class="plant-label">苔藓</span>
+                </div>
+
+                <div class="plant-card" data-type="草本">
+                    <img src="caoben.png" alt="草本" />
+                    <span class="plant-label">草本</span>
+                </div>
+
+                <div class="plant-card" data-type="灌木">
+                    <img src="guanmu.png" alt="灌木" />
+                    <span class="plant-label">灌木</span>
+                </div>
+
+                <div class="plant-card" data-type="乔木">
+                    <img src="qiaomu.png" alt="乔木" />
+                    <span class="plant-label">乔木</span>
+                </div>
+
+                <div class="library-divider"></div>
+
+                <div class="library-title" style="font-size:0.8rem; border-bottom: none; padding-bottom:0;">🐾 动物</div>
+
+                <div class="animal-card" data-animal="鸟类" id="animalCardBird">
+                    <img src="niaolei.png" alt="鸟类" />
+                    <span class="animal-label">鸟类</span>
+                </div>
+
+                <div class="animal-card" data-animal="昆虫" id="animalCardInsect">
+                    <img src="kunchong.png" alt="昆虫" />
+                    <span class="animal-label">昆虫</span>
+                </div>
+
+                <div class="animal-card" data-animal="土壤动物" id="animalCardSoil">
+                    <img src="turangdongwu.png" alt="土壤动物" />
+                    <span class="animal-label">土壤动物</span>
+                </div>
+
+                <div class="hint-text">拖到对应层次</div>
+            </div>
+
+            <div class="sandbox-area">
+                <div class="canvas" id="canvas">
+                    <div class="canvas-empty-message" id="emptyMsg">⬇️ 从左侧拖入植物</div>
+                </div>
+                <div style="text-align:right; margin-top:8px; opacity:0.4; font-size:0.7rem; color:#5f5342;">
+                    👆 拖拽移动 · 滚轮缩放 · 双击删除
+                </div>
+            </div>
+        </div>
+
+        <div class="summary-area" id="summaryArea">
+            <span class="summary-placeholder">先搭建植物群落，再点击"下一步"引入动物</span>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            "use strict";
+
+            const canvas = document.getElementById('canvas');
+            const emptyMsg = document.getElementById('emptyMsg');
+            const resetBtn = document.getElementById('resetBtn');
+            const summaryArea = document.getElementById('summaryArea');
+            const nextStepBtn = document.getElementById('nextStepBtn');
+            const stepHint = document.getElementById('stepHint');
+
+            const plantMap = {
+                '地衣': { img: 'diyi.png', label: '地衣' },
+                '苔藓': { img: 'taixian.png', label: '苔藓' },
+                '草本': { img: 'caoben.png', label: '草本' },
+                '灌木': { img: 'guanmu.png', label: '灌木' },
+                '乔木': { img: 'qiaomu.png', label: '乔木' }
+            };
+
+            const ANIMAL_RULES = {
+                '鸟类': {
+                    validLayers: ['乔木层', '灌木层'],
+                    img: 'niaolei.png',
+                    label: '鸟类'
+                },
+                '昆虫': {
+                    validLayers: ['灌木层', '草本层'],
+                    img: 'kunchong.png',
+                    label: '昆虫'
+                },
+                '土壤动物': {
+                    validLayers: ['地表层'],
+                    img: 'turangdongwu.png',
+                    label: '土壤动物'
+                }
+            };
+
+            const SUMMARY_TEXT =
+                '【110年森林群落】乔木层、灌木层、草本层、地表层分层清晰。鸟类跨层活动，昆虫分布于中下层，土壤动物生活于地表。结构越复杂，物种多样性越高，群落越稳定。';
+
+            let animalPlacement = {};
+            let animalElements = {};
+            let step = 1;
+
+            function updateEmptyMessage() {
+                const existing = canvas.querySelectorAll('.plant-instance, .animal-instance');
+                emptyMsg.style.display = existing.length === 0 ? 'block' : 'none';
+                if (existing.length > 0) {
+                    emptyMsg.textContent = step === 1 ? '⬇️ 继续搭建植物群落' : '⬇️ 拖入动物到对应层次';
+                } else {
+                    emptyMsg.textContent = step === 1 ? '⬇️ 从左侧拖入植物' : '⬇️ 从左侧拖入动物';
+                }
+            }
+
+            function getLayerFromY(y) {
+                const canvasHeight = canvas.clientHeight;
+                const relY = y / canvasHeight;
+                if (relY < 0.20) return '乔木层';
+                if (relY < 0.42) return '灌木层';
+                if (relY < 0.65) return '草本层';
+                return '地表层';
+            }
+
+            function createPlantInstance(type, x, y, size) {
+                const data = plantMap[type];
+                if (!data) return null;
+
+                const div = document.createElement('div');
+                div.className = 'plant-instance';
+                div.setAttribute('data-type', type);
+                div.style.left = x + 'px';
+                div.style.top = y + 'px';
+
+                const currentSize = size || 50;
+                const img = document.createElement('img');
+                img.src = data.img;
+                img.alt = data.label;
+                img.style.width = currentSize + 'px';
+                img.style.height = currentSize + 'px';
+                div.appendChild(img);
+
+                let isDragging = false;
+                let startX = 0,
+                    startY = 0;
+                let origX = 0,
+                    origY = 0;
+
+                function onStart(e) {
+                    e.preventDefault();
+                    const touch = e.touches ? e.touches[0] : e;
+                    isDragging = true;
+                    const currentLeft = parseFloat(div.style.left) || 0;
+                    const currentTop = parseFloat(div.style.top) || 0;
+                    startX = touch.clientX;
+                    startY = touch.clientY;
+                    origX = currentLeft;
+                    origY = currentTop;
+                    div.style.zIndex = 100;
+                    div.style.cursor = 'grabbing';
+                }
+
+                function onMove(e) {
+                    if (!isDragging) return;
+                    e.preventDefault();
+                    const touch = e.touches ? e.touches[0] : e;
+                    const dx = touch.clientX - startX;
+                    const dy = touch.clientY - startY;
+                    let newX = origX + dx;
+                    let newY = origY + dy;
+                    const maxX = canvas.clientWidth - div.offsetWidth - 6;
+                    const maxY = canvas.clientHeight - div.offsetHeight - 6;
+                    newX = Math.max(4, Math.min(maxX, newX));
+                    newY = Math.max(4, Math.min(maxY, newY));
+                    div.style.left = newX + 'px';
+                    div.style.top = newY + 'px';
+                }
+
+                function onEnd(e) {
+                    if (isDragging) {
+                        isDragging = false;
+                        div.style.zIndex = '';
+                        div.style.cursor = 'grab';
+                    }
+                }
+
+                div.addEventListener('mousedown', onStart);
+                window.addEventListener('mousemove', onMove);
+                window.addEventListener('mouseup', onEnd);
+                div.addEventListener('touchstart', onStart, { passive: false });
+                window.addEventListener('touchmove', onMove, { passive: false });
+                window.addEventListener('touchend', onEnd, { passive: false });
+
+                let currentSize2 = currentSize;
+                div.addEventListener('wheel', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const delta = e.deltaY > 0 ? -4 : 4;
+                    currentSize2 = Math.max(20, Math.min(120, currentSize2 + delta));
+                    const imgEl = div.querySelector('img');
+                    if (imgEl) {
+                        imgEl.style.width = currentSize2 + 'px';
+                        imgEl.style.height = currentSize2 + 'px';
+                    }
+                }, { passive: false });
+
+                div.addEventListener('dblclick', function(e) {
+                    e.stopPropagation();
+                    if (confirm('移除这株' + data.label + ' ？')) {
+                        div.remove();
+                        updateEmptyMessage();
+                    }
+                });
+
+                return div;
+            }
+
+            function createAnimalInstance(animal, x, y) {
+                const rule = ANIMAL_RULES[animal];
+                if (!rule) return null;
+
+                const div = document.createElement('div');
+                div.className = 'animal-instance';
+                div.setAttribute('data-animal', animal);
+                div.style.left = x + 'px';
+                div.style.top = y + 'px';
+
+                const img = document.createElement('img');
+                img.src = rule.img;
+                img.alt = rule.label;
+                div.appendChild(img);
+
+                let isDragging = false;
+                let startX = 0,
+                    startY = 0;
+                let origX = 0,
+                    origY = 0;
+
+                function onStart(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const touch = e.touches ? e.touches[0] : e;
+                    isDragging = true;
+                    const currentLeft = parseFloat(div.style.left) || 0;
+                    const currentTop = parseFloat(div.style.top) || 0;
+                    startX = touch.clientX;
+                    startY = touch.clientY;
+                    origX = currentLeft;
+                    origY = currentTop;
+                    div.style.zIndex = 100;
+                    div.style.cursor = 'grabbing';
+                    div.style.transform = 'scale(1.1)';
+                }
+
+                function onMove(e) {
+                    if (!isDragging) return;
+                    e.preventDefault();
+                    const touch = e.touches ? e.touches[0] : e;
+                    const dx = touch.clientX - startX;
+                    const dy = touch.clientY - startY;
+                    let newX = origX + dx;
+                    let newY = origY + dy;
+                    const maxX = canvas.clientWidth - div.offsetWidth - 6;
+                    const maxY = canvas.clientHeight - div.offsetHeight - 6;
+                    newX = Math.max(4, Math.min(maxX, newX));
+                    newY = Math.max(4, Math.min(maxY, newY));
+                    div.style.left = newX + 'px';
+                    div.style.top = newY + 'px';
+                }
+
+                function onEnd(e) {
+                    if (isDragging) {
+                        const rect = div.getBoundingClientRect();
+                        const cx = rect.left + rect.width / 2;
+                        const cy = rect.top + rect.height / 2;
+                        const layer = getLayerFromY(cy - canvas.getBoundingClientRect().top);
+
+                        // 检查是否放对
+                        if (rule.validLayers.includes(layer)) {
+                            div.classList.add('placed-correct');
+                            animalPlacement[animal] = layer;
+                            // 卡片消失
+                            const card = document.querySelector(`.animal-card[data-animal="${animal}"]`);
+                            if (card) card.style.display = 'none';
+                        } else {
+                            // 放错：无弹窗，不标记，就留在那里
+                            // 不添加任何标记，也不记录为正确
+                        }
+                        isDragging = false;
+                        div.style.zIndex = '';
+                        div.style.cursor = 'grab';
+                        div.style.transform = '';
+                        checkCompletion();
+                        updateEmptyMessage();
+                    }
+                }
+
+                div.addEventListener('mousedown', onStart);
+                window.addEventListener('mousemove', onMove);
+                window.addEventListener('mouseup', onEnd);
+                div.addEventListener('touchstart', onStart, { passive: false });
+                window.addEventListener('touchmove', onMove, { passive: false });
+                window.addEventListener('touchend', onEnd, { passive: false });
+
+                div.addEventListener('dblclick', function(e) {
+                    e.stopPropagation();
+                    const animalName = this.getAttribute('data-animal');
+                    if (confirm('移除这只' + rule.label + ' ？')) {
+                        div.remove();
+                        delete animalPlacement[animalName];
+                        delete animalElements[animalName];
+                        const card = document.querySelector(`.animal-card[data-animal="${animalName}"]`);
+                        if (card && step === 2) card.style.display = 'flex';
+                        checkCompletion();
+                        updateEmptyMessage();
+                    }
+                });
+
+                return div;
+            }
+
+            function checkCompletion() {
+                const allAnimals = Object.keys(ANIMAL_RULES);
+                const allPlaced = allAnimals.every(animal => {
+                    const layer = animalPlacement[animal];
+                    return layer && ANIMAL_RULES[animal].validLayers.includes(layer);
+                });
+
+                if (allPlaced) {
+                    summaryArea.innerHTML = `<span class="summary-text">${SUMMARY_TEXT}</span>`;
+                } else {
+                    const hasText = summaryArea.querySelector('.summary-text');
+                    if (!hasText) {
+                        summaryArea.innerHTML =
+                            `<span class="summary-placeholder">将三种动物拖到正确的层次，完成群落搭建</span>`;
+                    }
+                }
+            }
+
+            function goToStep2() {
+                step = 2;
+                document.querySelectorAll('.animal-card').forEach(card => {
+                    card.classList.add('visible');
+                    card.style.display = 'flex';
+                });
+                stepHint.textContent = '② 引入动物';
+                nextStepBtn.style.display = 'none';
+                updateEmptyMessage();
+                const hasText = summaryArea.querySelector('.summary-text');
+                if (!hasText) {
+                    summaryArea.innerHTML =
+                        `<span class="summary-placeholder">将三种动物拖到正确的层次，完成群落搭建</span>`;
+                }
+            }
+
+            nextStepBtn.addEventListener('click', goToStep2);
+
+            // ===== 植物拖拽 =====
+            document.querySelectorAll('.plant-card').forEach(card => {
+                card.addEventListener('mousedown', function(e) {
+                    e.preventDefault();
+                    const type = this.getAttribute('data-type');
+                    const ghost = document.createElement('div');
+                    ghost.style.position = 'fixed';
+                    ghost.style.pointerEvents = 'none';
+                    ghost.style.zIndex = '9999';
+                    ghost.style.transform = 'translate(-40%, -40%)';
+                    ghost.style.filter = 'drop-shadow(0 8px 16px rgba(0,0,0,0.25))';
+                    const imgSrc = plantMap[type]?.img || 'diyi.png';
+                    ghost.innerHTML =
+                        `<img src="${imgSrc}" style="width:50px;height:50px;object-fit:contain;display:block;pointer-events:none;" />`;
+                    document.body.appendChild(ghost);
+                    ghost.style.left = e.clientX + 'px';
+                    ghost.style.top = e.clientY + 'px';
+
+                    function onMove(e2) {
+                        if (ghost) {
+                            ghost.style.left = e2.clientX + 'px';
+                            ghost.style.top = e2.clientY + 'px';
+                        }
+                    }
+
+                    function onUp(e2) {
+                        if (ghost) { ghost.remove(); }
+                        window.removeEventListener('mousemove', onMove);
+                        window.removeEventListener('mouseup', onUp);
+                        const rect = canvas.getBoundingClientRect();
+                        const x = e2.clientX,
+                            y = e2.clientY;
+                        if (x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom) {
+                            const relX = x - rect.left - 25;
+                            const relY = y - rect.top - 25;
+                            const maxX = canvas.clientWidth - 60;
+                            const maxY = canvas.clientHeight - 60;
+                            const finalX = Math.max(6, Math.min(maxX, relX));
+                            const finalY = Math.max(6, Math.min(maxY, relY));
+                            const newPlant = createPlantInstance(type, finalX, finalY, 50);
+                            if (newPlant) {
+                                canvas.appendChild(newPlant);
+                                updateEmptyMessage();
+                            }
+                        }
+                    }
+                    window.addEventListener('mousemove', onMove);
+                    window.addEventListener('mouseup', onUp);
+                });
+
+                card.addEventListener('touchstart', function(e) {
+                    const touch = e.touches[0];
+                    const type = this.getAttribute('data-type');
+                    const ghost = document.createElement('div');
+                    ghost.style.position = 'fixed';
+                    ghost.style.pointerEvents = 'none';
+                    ghost.style.zIndex = '9999';
+                    ghost.style.transform = 'translate(-40%, -40%)';
+                    ghost.style.filter = 'drop-shadow(0 8px 16px rgba(0,0,0,0.25))';
+                    const imgSrc = plantMap[type]?.img || 'diyi.png';
+                    ghost.innerHTML =
+                        `<img src="${imgSrc}" style="width:50px;height:50px;object-fit:contain;display:block;pointer-events:none;" />`;
+                    document.body.appendChild(ghost);
+                    ghost.style.left = touch.clientX + 'px';
+                    ghost.style.top = touch.clientY + 'px';
+
+                    function onMove(e2) {
+                        e2.preventDefault();
+                        const t = e2.touches[0];
+                        if (ghost) {
+                            ghost.style.left = t.clientX + 'px';
+                            ghost.style.top = t.clientY + 'px';
+                        }
+                    }
+
+                    function onEnd(e2) {
+                        if (ghost) { ghost.remove(); }
+                        window.removeEventListener('touchmove', onMove);
+                        window.removeEventListener('touchend', onEnd);
+                        const last = e2.changedTouches[0];
+                        const rect = canvas.getBoundingClientRect();
+                        const x = last.clientX,
+                            y = last.clientY;
+                        if (x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom) {
+                            const relX = x - rect.left - 25;
+                            const relY = y - rect.top - 25;
+                            const maxX = canvas.clientWidth - 60;
+                            const maxY = canvas.clientHeight - 60;
+                            const finalX = Math.max(6, Math.min(maxX, relX));
+                            const finalY = Math.max(6, Math.min(maxY, relY));
+                            const newPlant = createPlantInstance(type, finalX, finalY, 50);
+                            if (newPlant) {
+                                canvas.appendChild(newPlant);
+                                updateEmptyMessage();
+                            }
+                        }
+                    }
+                    window.addEventListener('touchmove', onMove, { passive: false });
+                    window.addEventListener('touchend', onEnd, { passive: false });
+                }, { passive: false });
+            });
+
+            // ===== 动物拖拽 =====
+            document.querySelectorAll('.animal-card').forEach(card => {
+                card.addEventListener('mousedown', function(e) {
+                    if (step !== 2) {
+                        alert('请先点击"下一步"完成植物搭建');
+                        return;
+                    }
+                    e.preventDefault();
+                    const animal = this.getAttribute('data-animal');
+                    const rule = ANIMAL_RULES[animal];
+                    if (!rule) return;
+                    if (animalElements[animal]) {
+                        alert('这只' + rule.label + '已经在沙盘中了');
+                        return;
+                    }
+
+                    const ghost = document.createElement('div');
+                    ghost.style.position = 'fixed';
+                    ghost.style.pointerEvents = 'none';
+                    ghost.style.zIndex = '9999';
+                    ghost.style.transform = 'translate(-40%, -40%)';
+                    ghost.style.filter = 'drop-shadow(0 8px 16px rgba(0,0,0,0.25))';
+                    ghost.innerHTML =
+                        `<img src="${rule.img}" style="width:50px;height:50px;object-fit:contain;display:block;pointer-events:none;" />`;
+                    document.body.appendChild(ghost);
+                    ghost.style.left = e.clientX + 'px';
+                    ghost.style.top = e.clientY + 'px';
+
+                    function onMove(e2) {
+                        if (ghost) {
+                            ghost.style.left = e2.clientX + 'px';
+                            ghost.style.top = e2.clientY + 'px';
+                        }
+                    }
+
+                    function onUp(e2) {
+                        if (ghost) { ghost.remove(); }
+                        window.removeEventListener('mousemove', onMove);
+                        window.removeEventListener('mouseup', onUp);
+                        const rect = canvas.getBoundingClientRect();
+                        const x = e2.clientX,
+                            y = e2.clientY;
+                        if (x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom) {
+                            const relX = x - rect.left - 30;
+                            const relY = y - rect.top - 30;
+                            const maxX = canvas.clientWidth - 60;
+                            const maxY = canvas.clientHeight - 60;
+                            const finalX = Math.max(6, Math.min(maxX, relX));
+                            const finalY = Math.max(6, Math.min(maxY, relY));
+
+                            const layer = getLayerFromY(finalY);
+                            const newAnimal = createAnimalInstance(animal, finalX, finalY);
+                            if (newAnimal) {
+                                canvas.appendChild(newAnimal);
+                                animalElements[animal] = newAnimal;
+                                if (rule.validLayers.includes(layer)) {
+                                    newAnimal.classList.add('placed-correct');
+                                    animalPlacement[animal] = layer;
+                                    card.style.display = 'none';
+                                } else {
+                                    // 放错：不加标记，卡片保留（但已经拖了一个实例到沙盘，卡片仍然显示）
+                                    // 但动物实例已经在沙盘里了，只是没有正确标记
+                                    // 卡片保留，学生可以再拖
+                                    // 但是我们已经把动物放进了沙盘，卡片还保留会有问题：同一只动物可以拖多次
+                                    // 所以不管对错，卡片都隐藏，防止重复拖
+                                    card.style.display = 'none';
+                                    // 但放错的话，不记录为正确
+                                }
+                                checkCompletion();
+                                updateEmptyMessage();
+                            }
+                        }
+                    }
+                    window.addEventListener('mousemove', onMove);
+                    window.addEventListener('mouseup', onUp);
+                });
+
+                card.addEventListener('touchstart', function(e) {
+                    if (step !== 2) {
+                        alert('请先点击"下一步"完成植物搭建');
+                        return;
+                    }
+                    const touch = e.touches[0];
+                    const animal = this.getAttribute('data-animal');
+                    const rule = ANIMAL_RULES[animal];
+                    if (!rule) return;
+                    if (animalElements[animal]) {
+                        alert('这只' + rule.label + '已经在沙盘中了');
+                        return;
+                    }
+
+                    const ghost = document.createElement('div');
+                    ghost.style.position = 'fixed';
+                    ghost.style.pointerEvents = 'none';
+                    ghost.style.zIndex = '9999';
+                    ghost.style.transform = 'translate(-40%, -40%)';
+                    ghost.style.filter = 'drop-shadow(0 8px 16px rgba(0,0,0,0.25))';
+                    ghost.innerHTML =
+                        `<img src="${rule.img}" style="width:50px;height:50px;object-fit:contain;display:block;pointer-events:none;" />`;
+                    document.body.appendChild(ghost);
+                    ghost.style.left = touch.clientX + 'px';
+                    ghost.style.top = touch.clientY + 'px';
+
+                    function onMove(e2) {
+                        e2.preventDefault();
+                        const t = e2.touches[0];
+                        if (ghost) {
+                            ghost.style.left = t.clientX + 'px';
+                            ghost.style.top = t.clientY + 'px';
+                        }
+                    }
+
+                    function onEnd(e2) {
+                        if (ghost) { ghost.remove(); }
+                        window.removeEventListener('touchmove', onMove);
+                        window.removeEventListener('touchend', onEnd);
+                        const last = e2.changedTouches[0];
+                        const rect = canvas.getBoundingClientRect();
+                        const x = last.clientX,
+                            y = last.clientY;
+                        if (x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom) {
+                            const relX = x - rect.left - 30;
+                            const relY = y - rect.top - 30;
+                            const maxX = canvas.clientWidth - 60;
+                            const maxY = canvas.clientHeight - 60;
+                            const finalX = Math.max(6, Math.min(maxX, relX));
+                            const finalY = Math.max(6, Math.min(maxY, relY));
+
+                            const layer = getLayerFromY(finalY);
+                            const newAnimal = createAnimalInstance(animal, finalX, finalY);
+                            if (newAnimal) {
+                                canvas.appendChild(newAnimal);
+                                animalElements[animal] = newAnimal;
+                                if (rule.validLayers.includes(layer)) {
+                                    newAnimal.classList.add('placed-correct');
+                                    animalPlacement[animal] = layer;
+                                    card.style.display = 'none';
+                                } else {
+                                    card.style.display = 'none';
+                                }
+                                checkCompletion();
+                                updateEmptyMessage();
+                            }
+                        }
+                    }
+                    window.addEventListener('touchmove', onMove, { passive: false });
+                    window.addEventListener('touchend', onEnd, { passive: false });
+                }, { passive: false });
+            });
+
+            // ===== 重置 =====
+            function resetAll() {
+                canvas.querySelectorAll('.plant-instance, .animal-instance').forEach(el => el.remove());
+                animalPlacement = {};
+                animalElements = {};
+                document.querySelectorAll('.animal-card').forEach(card => {
+                    card.style.display = step === 2 ? 'flex' : 'none';
+                    if (step === 2) card.classList.add('visible');
+                });
+                summaryArea.innerHTML =
+                    `<span class="summary-placeholder">先搭建植物群落，再点击"下一步"引入动物</span>`;
+                updateEmptyMessage();
+            }
+
+            resetBtn.addEventListener('click', function() {
+                if (confirm('清空沙盘，重新搭建？')) {
+                    resetAll();
+                }
+            });
+
+            updateEmptyMessage();
+
+            document.addEventListener('dragover', function(e) { e.preventDefault(); });
+            document.addEventListener('drop', function(e) { e.preventDefault(); });
+
+            document.addEventListener('touchmove', function(e) {
+                if (e.target.closest('.canvas') || e.target.closest('.plant-card') || e.target.closest('.animal-card')) {
+                    e.preventDefault();
+                }
+            }, { passive: false });
+
+        })();
+    </script>
+
+</body>
+</html>
